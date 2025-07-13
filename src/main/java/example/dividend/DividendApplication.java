@@ -16,10 +16,12 @@ public class DividendApplication {
 //		SpringApplication.run(DividendApplication.class, args);
 
         try {
+            //야후 파이넨스 코카콜라 배당금 url
             Connection connection =
                     Jsoup.connect("https://finance.yahoo.com/quote/COKE/history/?frequency=1mo&period1=99153000&period2=1752383995");
             Document document = connection.get();
 
+            //html코드를 봤을때 data-testid가 history-table인것 중에서 선택하기위해서
             Elements eles = document.getElementsByAttributeValue("data-testid", "history-table");
             Element ele = eles.get(0); // table 전체
 
@@ -31,6 +33,7 @@ public class DividendApplication {
                     continue;
                 }
 
+                //코드를 ' '를 기준으로 담아서 저장하기 위한 코드
                 String[] splits = txt.split(" ");
                 String month = splits[0];
                 int day = Integer.valueOf(splits[1].replace(",",""));
