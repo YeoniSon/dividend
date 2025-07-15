@@ -1,5 +1,6 @@
 package example.dividend.service;
 
+import example.dividend.AutoComplete;
 import example.dividend.model.Company;
 import example.dividend.model.ScrapedResult;
 import example.dividend.persist.CompanyRepository;
@@ -8,7 +9,9 @@ import example.dividend.persist.entity.CompanyEntity;
 import example.dividend.persist.entity.DividendEntity;
 import example.dividend.scraper.Scrapper;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -18,6 +21,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class CompanyService {
+
+    private final Trie trie;
 
     private final Scrapper yahooFinanceScrapper;
     private final CompanyRepository companyRepository;
@@ -55,5 +60,28 @@ public class CompanyService {
 
 
         return company;
+    }
+
+    public List<String> getCompanyNamesByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0, 10);
+        Page<CompanyEntity> companyEntities =
+                this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+        return companyEntities.stream()
+                .map(e -> e.getName())
+                .toList();
+    }
+
+    public void addAutocompleteKeyword(String keyword) {
+        this.trie.put(keyword, null);
+    }
+
+    public List<String> autocomplete(String keyword) {
+        return (List<String>) this.trie.prefixMap(keyword).keySet()
+                .stream()
+                .toList();
+    }
+
+    public void deleteAutocompleteKeyword(String keyword) {
+        this.trie.remove(keyword);
     }
 }
