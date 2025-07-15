@@ -8,6 +8,8 @@ import example.dividend.persist.entity.CompanyEntity;
 import example.dividend.persist.entity.DividendEntity;
 import example.dividend.scraper.Scrapper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -29,6 +31,10 @@ public class CompanyService {
         return this.storeCompanyAndDividend(ticker);
     }
 
+    public Page<CompanyEntity> getAllCompany(Pageable pageable) {
+        return this.companyRepository.findAll(pageable);
+    }
+
     private Company storeCompanyAndDividend(String ticker) {
         // ticker를 기준으로 회사를 스크래핑
         Company company = this.yahooFinanceScrapper.scrapCompanyByTicker(ticker);
@@ -46,7 +52,6 @@ public class CompanyService {
                 .toList();
 
         this.dividendRepository.saveAll(dividendEntitiesList);
-
 
 
         return company;
