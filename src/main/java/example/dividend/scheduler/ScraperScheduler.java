@@ -52,6 +52,7 @@ public class ScraperScheduler {
         // 저장된 회사 목록을 조회
         List<CompanyEntity> companies = this.companyRepository.findAll();
 
+
         // 회사마다 배당금 정보를 새로 스크래핑
         for (var company : companies) {
             log.info("scraping scheduler is started -> " + company.getName());
