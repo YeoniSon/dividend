@@ -1,13 +1,12 @@
 package example.dividend.service;
 
-import example.dividend.AutoComplete;
 import example.dividend.model.Company;
 import example.dividend.model.ScrapedResult;
 import example.dividend.persist.CompanyRepository;
 import example.dividend.persist.DividendRepository;
 import example.dividend.persist.entity.CompanyEntity;
 import example.dividend.persist.entity.DividendEntity;
-import example.dividend.scraper.Scrapper;
+import example.dividend.scraper.Scraper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
@@ -24,7 +23,7 @@ public class CompanyService {
 
     private final Trie trie;
 
-    private final Scrapper yahooFinanceScrapper;
+    private final Scraper yahooFinanceScraper;
     private final CompanyRepository companyRepository;
     private final DividendRepository dividendRepository;
 
@@ -42,13 +41,13 @@ public class CompanyService {
 
     private Company storeCompanyAndDividend(String ticker) {
         // ticker를 기준으로 회사를 스크래핑
-        Company company = this.yahooFinanceScrapper.scrapCompanyByTicker(ticker);
+        Company company = this.yahooFinanceScraper.scrapCompanyByTicker(ticker);
         if (ObjectUtils.isEmpty(company)) {
             throw new RuntimeException("failed to scrap ticker -> " + ticker);
         }
 
         //해당 회사가 존재할 경우, 회사의 배당금 정보를 스크래핑
-        ScrapedResult scrapedResult = this.yahooFinanceScrapper.scrap(company);
+        ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(company);
 
         //스크래핑 결과
         CompanyEntity companyEntity = this.companyRepository.save(new CompanyEntity(company));

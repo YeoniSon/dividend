@@ -12,13 +12,12 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class YahooFinanceScraper implements Scrapper{
+public class YahooFinanceScraper implements Scraper {
 
     //상수값을 설정하기 위해서 final 사용
     private static final String STATISTICS_URL = "https://finance.yahoo.com/quote/%s/history/?frequency=1mo&period1=%d&period2=%d";
