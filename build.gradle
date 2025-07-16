@@ -31,6 +31,9 @@ dependencies {
 	//apache
 	implementation 'org.apache.commons:commons-collections4:4.3'
 
+	//redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	//jsoup
 	implementation 'org.jsoup:jsoup:1.17.2'
 
