@@ -25,7 +25,7 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("couldn't find user -> " + username));
     }
 
-    public MemberEntity register(Auth.signUp member) {
+    public MemberEntity register(Auth.SignUp member) {
         boolean exists = this.memberRepository.existsByUsername(member.getUsername());
         if (exists) {
             throw new RuntimeException("이미 사용 중인 아이디 입니다");
@@ -37,7 +37,15 @@ public class MemberService implements UserDetailsService {
         return result;
     }
 
-    public MemberEntity authenticate(Auth.signIn member) {
-        return null;
+    public MemberEntity authenticate(Auth.SignIn member) {
+
+        var user = this.memberRepository.findByUsername(member.getUsername())
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 ID 입니다"));
+
+        if (!this.passwordEncoder.matches(member.getPassword(), user.getPassword())) {
+            throw new RuntimeException("비밀번호가 일치하지 않습니다");
+        }
+
+        return user;
     }
 }
