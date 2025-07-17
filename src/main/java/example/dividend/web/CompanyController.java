@@ -65,6 +65,7 @@ public class CompanyController {
         return ResponseEntity.ok(companyName);
     }
 
+    // 캐시 삭제
     public void clearFinanceCache(String companyName) {
         // Not implemented yet
         this.redisCacheManager.getCache(CacheKey.KEY_FINANCE).evict(companyName);
